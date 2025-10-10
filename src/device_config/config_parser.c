@@ -230,18 +230,23 @@ void parse_config()
     zigbee_endpoint_init(&endpoints[index]);
   }
 
-  basic_cluster_add_to_endpoint(&basic_cluster, &endpoints[0]);
+  basic_cluster_fill(&basic_cluster);
   zigbee_endpoint_add_cluster(&endpoints[0], 0, ZCL_CLUSTER_OTA);
   zigbee_endpoint_add_cluster(&endpoints[0], 1, ZCL_CLUSTER_TOUCHLINK_COMMISSIONING);
 
   for (int index = 0; index < switch_clusters_cnt; index++)
   {
+    basic_cluster_add_to_endpoint(&basic_cluster, &endpoints[index]);
+
     switch_cluster_add_to_endpoint(&switch_clusters[index], &endpoints[index]);
   }
   for (int index = 0; index < relay_clusters_cnt; index++)
   {
     relay_clusters[index].scene_cluster = scene_clusters + index;
     scene_clusters[index].relay_cluster = relay_clusters + index;
+
+    basic_cluster_add_to_endpoint(&basic_cluster, &endpoints[switch_clusters_cnt + index]);
+
 
     relay_cluster_add_to_endpoint(&relay_clusters[index], &endpoints[switch_clusters_cnt + index]);
     // Group cluster is stateless, safe to add to multiple endpoints

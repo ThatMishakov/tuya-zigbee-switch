@@ -52,7 +52,7 @@ void basic_cluster_callback_attr_write_trampoline(u8 clusterId, zclWriteCmd_t *p
   }
 }
 
-void basic_cluster_add_to_endpoint(zigbee_basic_cluster *cluster, zigbee_endpoint *endpoint)
+void basic_cluster_fill(zigbee_basic_cluster *cluster)
 {
   populate_date_code();
 
@@ -73,6 +73,11 @@ void basic_cluster_add_to_endpoint(zigbee_basic_cluster *cluster, zigbee_endpoin
     SETUP_ATTR(12, ZCL_ATTRID_STATUS_LED_STATE, ZCL_DATA_TYPE_BOOLEAN, ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE, network_indicator.manual_state_when_connected);
   }
 
+  basic_cluster_load_attrs_from_nv();
+}
+
+void basic_cluster_add_to_endpoint(zigbee_basic_cluster *cluster, zigbee_endpoint *endpoint)
+{
   zigbee_endpoint_add_cluster(endpoint, 1, ZCL_CLUSTER_GEN_BASIC);
   zcl_specClusterInfo_t *info = zigbee_endpoint_reserve_info(endpoint);
   info->clusterId           = ZCL_CLUSTER_GEN_BASIC;
@@ -81,8 +86,6 @@ void basic_cluster_add_to_endpoint(zigbee_basic_cluster *cluster, zigbee_endpoin
   info->attrTbl             = cluster->attr_infos;
   info->clusterRegisterFunc = zcl_basic_register;
   info->clusterAppCb        = basic_cluster_callback_trampoline;
-
-  basic_cluster_load_attrs_from_nv();
 }
 
 void populate_date_code()
