@@ -227,15 +227,14 @@ void parse_config()
   for (int index = 0; index < total_endpoints; index++)
   {
     endpoints[index].index = index + 1;
-    zigbee_endpoint_init(&endpoints[index]);
   }
 
   basic_cluster_fill(&basic_cluster);
-  zigbee_endpoint_add_cluster(&endpoints[0], 0, ZCL_CLUSTER_OTA);
-  zigbee_endpoint_add_cluster(&endpoints[0], 1, ZCL_CLUSTER_TOUCHLINK_COMMISSIONING);
 
   for (int index = 0; index < switch_clusters_cnt; index++)
   {
+    zigbee_endpoint_init(&endpoints[index], HA_DEV_ONOFF_SWITCH);
+
     basic_cluster_add_to_endpoint(&basic_cluster, &endpoints[index]);
 
     switch_cluster_add_to_endpoint(&switch_clusters[index], &endpoints[index]);
@@ -245,8 +244,9 @@ void parse_config()
     relay_clusters[index].scene_cluster = scene_clusters + index;
     scene_clusters[index].relay_cluster = relay_clusters + index;
 
-    basic_cluster_add_to_endpoint(&basic_cluster, &endpoints[switch_clusters_cnt + index]);
+    zigbee_endpoint_init(&endpoints[switch_clusters_cnt + index], HA_DEV_ONOFF_OUTPUT);
 
+    basic_cluster_add_to_endpoint(&basic_cluster, &endpoints[switch_clusters_cnt + index]);
 
     relay_cluster_add_to_endpoint(&relay_clusters[index], &endpoints[switch_clusters_cnt + index]);
     // Group cluster is stateless, safe to add to multiple endpoints
@@ -254,6 +254,9 @@ void parse_config()
 
     scene_cluster_add_to_endpoint(scene_clusters + index, &endpoints[switch_clusters_cnt + index]);
   }
+
+  zigbee_endpoint_add_cluster(&endpoints[0], 0, ZCL_CLUSTER_OTA);
+  zigbee_endpoint_add_cluster(&endpoints[0], 1, ZCL_CLUSTER_TOUCHLINK_COMMISSIONING);
 
   for (int index = 0; index < total_endpoints; index++)
   {
