@@ -117,8 +117,6 @@ void user_app_init(void)
 
   parse_config();
 
-  zcl_touchLinkInit();
-
   ota_init(OTA_TYPE_CLIENT, (af_simple_descriptor_t *)&endpoints[0].simple_description, &baseEndpoint_otaInfo, &baseEndpoint_otaCb);
 }
 
