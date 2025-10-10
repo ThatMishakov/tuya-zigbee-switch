@@ -679,3 +679,14 @@ static bool relay_cluster_control_phys_relay(zigbee_relay_cluster *cluster)
 {
   return !relay_cluster_is_identifying(cluster) || cluster->indicator_led;
 }
+
+extern zigbee_relay_cluster relay_clusters[4];
+extern u8 relay_clusters_cnt;
+
+void relay_cluster_identify_all(u16 identify_timeout)
+{
+  for (u8 i = 0; i < relay_clusters_cnt; ++i)
+  {
+    identify_set(&relay_clusters[i], identify_timeout);
+  }
+}

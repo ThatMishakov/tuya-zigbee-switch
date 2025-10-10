@@ -7,6 +7,8 @@
 
 #include "device_config/device_config.h"
 
+#include "zigbee/relay_cluster.h"
+
 void device_bdbInitCb(u8 status, u8 joinedNetwork);
 void device_bdbCommissioningCb(u8 status, void *arg);
 void device_bdbIdentifyCb(u8 endpoint, u16 srcAddr, u16 identifyTime);
@@ -82,6 +84,17 @@ void device_bdbInitCb(u8 status, u8 joinedNetwork)
   }
 }
 
+#if FIND_AND_BIND_SUPPORT
+s32 device_bdbFindAndBindStart(void *arg)
+{
+    bdb_findAndBindStart(BDB_COMMISSIONING_ROLE_TARGET);
+
+    return -1;
+}
+#endif
+
+bool bdbFindBindFlg = false;
+
 /*********************************************************************
  * @fn      device_bdbCommissioningCb
  *
@@ -105,6 +118,14 @@ void device_bdbCommissioningCb(u8 status, void *arg)
       TL_ZB_TIMER_CANCEL(&steerTimerEvt);
     }
     ota_queryStart(OTA_PERIODIC_QUERY_INTERVAL);
+
+#if FIND_AND_BIND_SUPPORT
+    if (!bdbFindBindFlg) {
+        bdbFindBindFlg = true;
+        TL_ZB_TIMER_SCHEDULE(device_bdbFindAndBindStart, NULL, 1000);
+    }
+#endif
+
     break;
   case BDB_COMMISSION_STA_IN_PROGRESS:
     break;
@@ -152,7 +173,14 @@ void device_bdbCommissioningCb(u8 status, void *arg)
 
 void device_bdbIdentifyCb(u8 endpoint, u16 srcAddr, u16 identifyTime)
 {
-  // TODO: maybe handle this with blinking of system LED?
+  (void)endpoint;
+  (void)srcAddr;
+
+  #if FIND_AND_BIND_SUPPORT
+  relay_cluster_identify_all(identifyTime);
+  #else
+  (void)identifyTime;
+  #endif
 }
 
 void device_otaProcessMsgHandler(u8 evt, u8 status)

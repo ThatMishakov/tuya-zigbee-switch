@@ -232,6 +232,7 @@ void parse_config()
 
   basic_cluster_add_to_endpoint(&basic_cluster, &endpoints[0]);
   zigbee_endpoint_add_cluster(&endpoints[0], 0, ZCL_CLUSTER_OTA);
+  zigbee_endpoint_add_cluster(&endpoints[0], 1, ZCL_CLUSTER_TOUCHLINK_COMMISSIONING);
 
   for (int index = 0; index < switch_clusters_cnt; index++)
   {

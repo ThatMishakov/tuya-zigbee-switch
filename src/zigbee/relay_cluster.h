@@ -70,4 +70,7 @@ bool relay_cluster_is_identifying(zigbee_relay_cluster *cluster);
 bool relay_cluster_get_on_off(zigbee_relay_cluster *cluster);
 void relay_cluster_set_on_off(zigbee_relay_cluster *cluster, bool new_state, bool from_scene);
 
+// Start identify on all relay clusters
+void relay_cluster_identify_all(u16 identify_timeout);
+
 #endif
