@@ -74,7 +74,7 @@ bdb_commissionSetting_t g_bdbCommissionSetting =
   .linkKey.touchLinkKey.keyType = MASTER_KEY,
   .linkKey.touchLinkKey.key     = (u8 *)touchLinkKeyMaster,                             //use touchLinkKeyCertification before testing
 
-  .touchlinkEnable       =                  0,                                          /* disable touch-link */
+  .touchlinkEnable       =                  1,                                          /* enable touch-link */
   .touchlinkChannel      = DEFAULT_CHANNEL,                                             /* touch-link default operation channel for target */
   .touchlinkLqiThreshold =               0xA0,                                          /* threshold for touch-link scan req/resp command */
 };

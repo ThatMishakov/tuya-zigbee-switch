@@ -89,7 +89,7 @@ extern "C" {
 #define ZCL_GROUP_SUPPORT         1
 #define ZCL_SCENE_SUPPORT         1
 #define ZCL_OTA_SUPPORT           1
-#define TOUCHLINK_SUPPORT         0
+#define TOUCHLINK_SUPPORT         1
 #define FIND_AND_BIND_SUPPORT     0
 #define REJOIN_FAILURE_TIMER      1
 
